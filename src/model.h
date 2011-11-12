@@ -63,10 +63,10 @@ private:
 	int nbins, bin;
 	qreal binwidth;
 
-	qreal timeFull, timeInside, energySum;
+	qreal timeFull, timeInside, impulseSum;
 	QVector<qreal> time;      // values of time
 	QVector<qreal> prob;      // magnitude of the bin
-	QVector<qreal> energies;  // overall sum of collision energies
+	QVector<qreal> impulses;  // overall sum of collision impulses
 };
 
 #endif

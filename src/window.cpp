@@ -77,6 +77,7 @@ void Window::clearSettings()
 	ui->numberBox->setValue(0);
 	timer->stop();
 	updateTogglePlayButton();
+	model.clear();
 }
 
 void Window::keyPressEvent(QKeyEvent *e)

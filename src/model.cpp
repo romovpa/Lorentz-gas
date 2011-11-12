@@ -43,10 +43,10 @@ void Model::clear()
 {
 	time.clear();
 	prob.clear();
-	energies.clear();
+	impulses.clear();
 	timeFull = 0;
 	timeInside = 0;
-	energySum = 0;
+	impulseSum = 0;
 }
 
 int Model::getNumber()
@@ -131,22 +131,22 @@ void Model::checkBorders(QPointF& p, qreal& phi)
     if (dy > 0) {
         p.ry() = h - dy;
         phi = 2 * M_PI - phi;
-		energySum += dy;
+		impulseSum += dy;
     }
     if (dx > 0) {
         p.rx() = w - dx;
         phi = 3 * M_PI - phi;
-		energySum += dx;
+		impulseSum += dx;
     }
     if (y < electronR) {
         p.ry() = 2 * electronR - y;
         phi = 2 * M_PI - phi;
-		energySum += electronR - y;
+		impulseSum += electronR - y;
     }
     if (x < electronR) {
         p.rx() = 2 * electronR - x;
         phi = 3 * M_PI - phi;
-		energySum += electronR - x;
+		impulseSum += electronR - x;
     }
 }
 
@@ -216,7 +216,7 @@ void Model::step(int elapsed)
 		if (time.size() < MAX_HISTORY) {
 			time.push_back(timeFull);
 			prob.push_back(timeInside/timeFull);
-			energies.push_back(energySum);
+			impulses.push_back(impulseSum);
 		}
 
 		positions[i] = newP;
