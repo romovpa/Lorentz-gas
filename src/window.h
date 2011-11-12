@@ -26,11 +26,11 @@ protected slots:
 	void saveShot();
 	void togglePlay();
 	void clearSettings();
+	void updateTogglePlayButton();
+	void updateBinsNumber(int);
 
 private:
 	Ui::Window *ui;
-
-	void updateTogglePlayButton();
 
 	QTimer *timer;
 	Widget *native;

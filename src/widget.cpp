@@ -96,3 +96,26 @@ void Widget::setSpeed(double val)
 	model->setSpeed(val);
 	repaint();
 }
+
+void Widget::setShowBins(bool val)
+{
+	model->setShowBins(val);
+	repaint();
+}
+
+void Widget::setBinsNumber(int val)
+{
+	model->setBinsNumber(val);
+	repaint();
+}
+
+void Widget::setBinIndex(int val)
+{
+	model->setBinIndex(val-1);
+	repaint();
+}
+
+void Widget::clear()
+{
+	model->clear();
+}

@@ -23,6 +23,10 @@ public slots:
 	void setSpeed(double);
 	void setAtomR(double);
 	void setElectronR(double);
+	void setShowBins(bool);
+	void setBinsNumber(int);
+	void setBinIndex(int);
+	void clear();
 
 signals:
 	void numberChanged(int);

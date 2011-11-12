@@ -30,12 +30,17 @@ Window::Window(QWidget *parent)
 	connect(ui->atomRadBox, SIGNAL(valueChanged(double)), native, SLOT(setAtomR(double)));
 	connect(ui->electronRadBox, SIGNAL(valueChanged(double)), native, SLOT(setElectronR(double)));
 	connect(ui->speedBox, SIGNAL(valueChanged(double)), native, SLOT(setSpeed(double)));
+	connect(ui->showBinsBox, SIGNAL(toggled(bool)), native, SLOT(setShowBins(bool)));
+	connect(ui->binsBox, SIGNAL(valueChanged(int)), this, SLOT(updateBinsNumber(int)));
+	connect(ui->binIndexBox, SIGNAL(valueChanged(int)), native, SLOT(setBinIndex(int)));
 
 	native->setNumber(ui->numberBox->value());
 	native->setSide(ui->sideBox->value());
 	native->setAtomR(ui->atomRadBox->value());
 	native->setElectronR(ui->electronRadBox->value());
 	native->setSpeed(ui->speedBox->value());
+	native->setShowBins(ui->showBinsBox->checkState());
+	updateBinsNumber(ui->binsBox->value());
 }
 
 void Window::saveShot()
@@ -59,6 +64,12 @@ void Window::updateTogglePlayButton()
 		ui->togglePlayButton->setText(tr("Pause"));
 	else
 		ui->togglePlayButton->setText(tr("Play"));
+}
+
+void Window::updateBinsNumber(int num)
+{
+	ui->binIndexBox->setMaximum(num);
+	native->setBinsNumber(num);
 }
 
 void Window::clearSettings()
