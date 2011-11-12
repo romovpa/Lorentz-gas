@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QImage>
 
 class Model;
 
@@ -13,6 +14,7 @@ class Widget : public QWidget
 
 public:
     Widget(Model *model, QWidget *parent);
+	QImage getImage();
 
 public slots:
     void animate();

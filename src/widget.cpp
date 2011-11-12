@@ -26,3 +26,10 @@ void Widget::paintEvent(QPaintEvent *event)
     model->paint(&painter, event, elapsed);
     painter.end();
 }
+
+QImage Widget::getImage()
+{
+	QPixmap pixmap(this->size());
+	render(&pixmap);
+	return pixmap.toImage();
+}

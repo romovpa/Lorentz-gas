@@ -1,30 +1,34 @@
 #include <QtGui>
+
 #include "widget.h"
 #include "window.h"
+#include "ui_window.h"
 
 static const int refresh_rate = 50;
 
-Window::Window()
-    : QWidget()
+Window::Window(QWidget *parent)
+	: QMainWindow(parent),
+	  ui(new Ui::Window)
 {
-    Widget *native = new Widget(&model, this);
-#ifdef LABEL
-    QLabel *nativeLabel = new QLabel(tr("Native"));
-    nativeLabel->setAlignment(Qt::AlignHCenter);
-#endif
+	ui->setupUi(this);
+	setWindowTitle(tr("Physics"));
 
-    QGridLayout *layout = new QGridLayout;
-    layout->addWidget(native, 0, 0);
-#ifdef LABEL
-    layout->addWidget(nativeLabel, 1, 0);
-#endif
-    setLayout(layout);
+	native = new Widget(&model, this);
+	ui->nativeLayout->addWidget(native, 0, 0);
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), native, SLOT(animate()));
     timer->start(refresh_rate);
 
-    setWindowTitle(tr("Physics"));
+	connect(ui->playButton, SIGNAL(clicked()), timer, SLOT(start()));
+	connect(ui->pauseButton, SIGNAL(clicked()), timer, SLOT(stop()));
+	connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(saveShot()));
+}
+
+void Window::saveShot()
+{
+	QString filename = QFileDialog::getSaveFileName(this, "Save Shot", QDir::currentPath(), "PNG Images (*.png)");
+	native->getImage().save(filename);
 }
 
 void Window::keyPressEvent(QKeyEvent *e)
