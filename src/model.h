@@ -10,11 +10,22 @@
 class Model
 {
 public:
-    Model();
+	Model();
 
 public:
-    void paint(QPainter *painter, QPaintEvent *event, int elapsed);
-    void setDim(int w, int h);
+	void step(int elapsed);
+	void add(int x, int y, qreal angle);
+
+	void paint(QPainter *painter, QPaintEvent *event);
+	void setDim(int w, int h);
+
+	int getNumber();
+
+	void setNumber(int newNum);
+	void setSide(int);
+	void setSpeed(qreal);
+	void setAtomR(qreal);
+	void setElectronR(qreal);
 
 private:
     void checkBorders(QPointF& p, qreal& phi);
@@ -29,6 +40,11 @@ private:
     QBrush background;
     QBrush atomBrush;
     QBrush electronBrush;
+
+	int side;
+	qreal atomR;
+	qreal electronR;
+	qreal speed;
 
     int num;
     QVector<qreal> speedDir;

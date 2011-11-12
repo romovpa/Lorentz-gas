@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QTimer>
 
 #include "model.h"
 #include "widget.h"
@@ -23,12 +24,17 @@ protected:
 
 protected slots:
 	void saveShot();
+	void togglePlay();
+	void clearSettings();
 
 private:
 	Ui::Window *ui;
 
+	void updateTogglePlayButton();
+
+	QTimer *timer;
 	Widget *native;
-    Model model;
+	Model model;
 };
 
 #endif

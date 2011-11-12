@@ -5,42 +5,84 @@
 #include <stdlib.h>
 #include <math.h>
 
-//hardcoded
-static const int side = 25;
-static const qreal atomR = 5;
-static const qreal electronR = 2;
-
-//user defined
-static const int n = 1;
-static const qreal speed = 100;
-
 Model::Model()
 {
+	// default parameters
+	side = 25;
+	atomR = 5;
+	electronR = 2;
+	speed = 100;
+
     background = QBrush(Qt::white);
     atomBrush = QBrush(Qt::black);
     electronBrush = QBrush(Qt::red);
 
-    xBegin = (400 % side) / 2; //FIXME width
-    yBegin = (400 % side) / 2; //FIXME height
+	xBegin = (width % side) / 2;
+	yBegin = (height % side) / 2;
     xBegin = xBegin ? xBegin : side;
     yBegin = yBegin ? yBegin : side;
+}
 
-    num = n;
-    int angle, x, y;
-    for (int i = 0; i < num; i++) {
-        //FIXME
-        x = rand() % 400;
-        y = rand() % 400;
-        positions.append(QPointF(x, y));
-        angle = rand() % 360;
-        speedDir.append((M_PI / 360) * angle);
-    }
+void Model::add(int x, int y, qreal angle)
+{
+	positions.append(QPointF(x, y));
+	speedDir.append(angle);
+	num++;
+}
+
+int Model::getNumber()
+{
+	return num;
+}
+
+void Model::setNumber(int newNum)
+{
+	while (newNum < num) {
+		positions.pop_back();
+		speedDir.pop_back();
+		num--;
+	}
+	while (newNum > num) {
+		// add a new electron
+		// with random position and direction
+		int x = rand() % width;
+		int y = rand() % height;
+		int angle = rand() % 360;
+		positions.append(QPointF(x, y));
+		speedDir.append((2*M_PI / 360) * angle);
+		num++;
+	}
+}
+
+void Model::setSide(int val)
+{
+	side = val;
+}
+
+void Model::setAtomR(qreal val)
+{
+	atomR = val;
+}
+
+void Model::setElectronR(qreal val)
+{
+	electronR = val;
+}
+
+void Model::setSpeed(qreal val)
+{
+	speed = val;
 }
 
 void Model::setDim(int w, int h)
 {
     width = w;
     height = h;
+
+	xBegin = (width % side) / 2;
+	yBegin = (height % side) / 2;
+	xBegin = xBegin ? xBegin : side;
+	yBegin = yBegin ? yBegin : side;
 }
 
 void Model::checkBorders(QPointF& p, qreal& phi)
@@ -80,7 +122,7 @@ void Model::checkAtom(QPointF& p, qreal& phi)
     phi = 2 * normalAngle - phi + M_PI;
 }
 
-void Model::paint(QPainter *painter, QPaintEvent *event, int elapsed)
+void Model::paint(QPainter *painter, QPaintEvent *event)
 {
     QPointF p;
     QRect rect = event->rect();
@@ -98,19 +140,22 @@ void Model::paint(QPainter *painter, QPaintEvent *event, int elapsed)
     }
 
     painter->setBrush(electronBrush); 
-    qreal s = speed * elapsed / 1000;
-    QPointF p1, p2;
 
     for (int i = 0; i < num; i++) {
-//        checkAtom(positions[i], speedDir[i]);
-
-        p.rx() = cos(speedDir[i]) * s;
-        p.ry() = sin(speedDir[i]) * s;
-        p1 = positions[i];
-        p2 = positions[i] += p;
-        checkBorders(positions[i], speedDir[i]);
         painter->drawEllipse(positions[i], electronR, electronR);
     }
 
     painter->restore();
+}
+
+void Model::step(int elapsed)
+{
+	QPointF p;
+	qreal s = speed * elapsed / 1000;
+	for (int i = 0; i < num; i++) {
+		p.rx() = cos(speedDir[i]) * s;
+		p.ry() = sin(speedDir[i]) * s;
+		positions[i] += p;
+		checkBorders(positions[i], speedDir[i]);
+	}
 }
