@@ -37,7 +37,7 @@ public:
 
 private:
     void checkBorders(QPointF& p, qreal& phi);
-    void checkAtom(QPointF& p, qreal& phi);
+	void checkAtom(QPointF& p, qreal& phi, QPointF pOld);
 
     int width;
     int height;

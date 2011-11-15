@@ -4,9 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 
 const int Model::MAX_HISTORY = 10000;
 const qreal Model::timeStep = 1.0;
+
+#define sqr(x) ((x)*(x))
 
 Model::Model()
 {
@@ -150,15 +153,69 @@ void Model::checkBorders(QPointF& p, qreal& phi)
     }
 }
 
-void Model::checkAtom(QPointF& p, qreal& phi)
+void Model::checkAtom(QPointF& p, qreal& phi, QPointF pOld)
 {
-    qreal x = p.x();
-    qreal y = p.y();
-    qreal xC = floor(x / side) * side + xBegin;
-    qreal yC = floor(y / side) * side + yBegin;
+	qreal x = p.x();
+	qreal y = p.y();
 
-    qreal normalAngle = atan2(y - yC, x - xC);
-    phi = 2 * normalAngle - phi + M_PI;
+	qreal xC1 = ceil((x-xBegin)/side) * side + xBegin;
+	qreal yC1 = ceil((y-yBegin)/side) * side + yBegin;
+
+	qreal xC2 = ceil((x-xBegin)/side) * side + xBegin;
+	qreal yC2 = floor((y-yBegin)/side) * side + yBegin;
+
+	qreal xC3 = floor((x-xBegin)/side) * side + xBegin;
+	qreal yC3 = floor((y-yBegin)/side) * side + yBegin;
+
+	qreal xC4 = floor((x-xBegin)/side) * side + xBegin;
+	qreal yC4 = ceil((y-yBegin)/side) * side + yBegin;
+
+	qreal xC, yC;
+	bool act = false;
+	if (qSqrt(sqr(x-xC1) + sqr(y-yC1)) <= atomR) {
+		xC = xC1;
+		yC = yC1;
+		act = true;
+	}
+	if (qSqrt(sqr(x-xC2) + sqr(y-yC2)) <= atomR) {
+		xC = xC2;
+		yC = yC2;
+		act = true;
+	}
+	if (qSqrt(sqr(x-xC3) + sqr(y-yC3)) <= atomR) {
+		xC = xC3;
+		yC = yC3;
+		act = true;
+	}
+	if (qSqrt(sqr(x-xC4) + sqr(y-yC4)) <= atomR) {
+		xC = xC4;
+		yC = yC4;
+		act = true;
+	}
+
+	if (act) {
+		qreal beta;
+		beta = atan2(y-yC, x-xC);
+		phi = 2*beta-phi-M_PI;
+
+		qreal R = atomR;
+
+		qreal x0 = pOld.x();
+		qreal y0 = pOld.y();
+
+		qreal dx = x - x0;
+		qreal dy = y - y0;
+		qreal l = sqrt(sqr(dx) + sqr(dy));
+
+		qreal D = sqr(2*((x0-xC)*dx + (y0-yC)*dy)) - 4*(sqr(dx)+sqr(dy))*(sqr(xC-x0)+sqr(yC-y0)-sqr(R));
+		qreal t = (2*((xC-x0)*dx + (yC-y0)*dy) - sqrt(D)) / (2*(sqr(dx) + sqr(dy)));
+
+		x = x0 + t*dx;
+		y = y0 + t*dy;
+		x += (1-t)*l*cos(phi);
+		y += (1-t)*l*sin(phi);
+		p = QPointF(x, y);
+	}
 }
 
 void Model::paint(QPainter *painter, QPaintEvent *event)
@@ -206,6 +263,7 @@ void Model::step(int elapsed)
 		curP = positions[i];
 		newP = curP + dP;
 		checkBorders(newP, speedDir[i]);
+		checkAtom(newP, speedDir[i], curP);
 
 		// probability estimation
 		if ((curP.x() >= bin*binwidth) && (curP.x() < (bin+1)*binwidth) &&
