@@ -125,8 +125,8 @@ void Model::setDim(int w, int h)
 
 void Model::checkBorders(QPointF& p, qreal& phi)
 {
-    int h = height - electronR;
-    int w = width - electronR;
+	int h = height;
+	int w = width;
     qreal y = p.y();
     qreal x = p.x();
     qreal dy = y - h;
@@ -141,15 +141,15 @@ void Model::checkBorders(QPointF& p, qreal& phi)
         phi = 3 * M_PI - phi;
 		impulseSum += dx;
     }
-    if (y < electronR) {
-        p.ry() = 2 * electronR - y;
+	if (y < 0) {
+		p.ry() = - y;
         phi = 2 * M_PI - phi;
-		impulseSum += electronR - y;
+		impulseSum += -y;
     }
-    if (x < electronR) {
-        p.rx() = 2 * electronR - x;
+	if (x < 0) {
+		p.rx() = -x;
         phi = 3 * M_PI - phi;
-		impulseSum += electronR - x;
+		impulseSum += -x;
     }
 }
 
