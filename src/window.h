@@ -37,7 +37,7 @@ private:
 	Widget *native;
 	Model model;
 
-        bool wasRunning;
+	bool wasRunning;
 };
 
 #endif
