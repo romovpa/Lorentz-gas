@@ -24,10 +24,11 @@ protected:
 
 protected slots:
 	void saveShot();
-	void togglePlay();
-	void clearSettings();
+        void togglePlay();
+        void clearSettings();
 	void updateTogglePlayButton();
 	void updateBinsNumber(int);
+        void trailMode(bool active);
 
 private:
 	Ui::Window *ui;
@@ -35,6 +36,8 @@ private:
 	QTimer *timer;
 	Widget *native;
 	Model model;
+
+        bool wasRunning;
 };
 
 #endif

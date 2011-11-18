@@ -22,6 +22,8 @@ Model::Model()
 	num = 0;
 	bin = 0;
 
+        paintTraceOnly = false;
+
     background = QBrush(Qt::white);
     atomBrush = QBrush(Qt::black);
     electronBrush = QBrush(Qt::red);
@@ -127,27 +129,27 @@ void Model::checkBorders(QPointF& p, qreal& phi)
 {
 	int h = height;
 	int w = width;
-    qreal y = p.y();
-    qreal x = p.x();
-    qreal dy = y - h;
-    qreal dx = x - w;
+    qreal y = p.y() - electronR;
+    qreal x = p.x() - electronR;
+    qreal dy = y - h + 2*electronR;
+    qreal dx = x - w + 2*electronR;
     if (dy > 0) {
-        p.ry() = h - dy;
+        p.ry() = h - electronR - dy;
         phi = 2 * M_PI - phi;
 		impulseSum += dy;
     }
     if (dx > 0) {
-        p.rx() = w - dx;
+        p.rx() = w - electronR - dx;
         phi = 3 * M_PI - phi;
 		impulseSum += dx;
     }
-	if (y < 0) {
-		p.ry() = - y;
+        if (y < 0) {
+                p.ry() = electronR - y;
         phi = 2 * M_PI - phi;
 		impulseSum += -y;
     }
-	if (x < 0) {
-		p.rx() = -x;
+        if (x < 0) {
+                p.rx() = electronR - x;
         phi = 3 * M_PI - phi;
 		impulseSum += -x;
     }
@@ -170,24 +172,24 @@ void Model::checkAtom(QPointF& p, qreal& phi, QPointF pOld)
 	qreal xC4 = floor((x-xBegin)/side) * side + xBegin;
 	qreal yC4 = ceil((y-yBegin)/side) * side + yBegin;
 
-	qreal xC, yC;
+        qreal xC = 1, yC = 1;
 	bool act = false;
-	if (qSqrt(sqr(x-xC1) + sqr(y-yC1)) <= atomR) {
+        if (qSqrt(sqr(x-xC1) + sqr(y-yC1)) <= atomR + electronR) {
 		xC = xC1;
 		yC = yC1;
 		act = true;
 	}
-	if (qSqrt(sqr(x-xC2) + sqr(y-yC2)) <= atomR) {
+        if (qSqrt(sqr(x-xC2) + sqr(y-yC2)) <= atomR + electronR) {
 		xC = xC2;
 		yC = yC2;
 		act = true;
 	}
-	if (qSqrt(sqr(x-xC3) + sqr(y-yC3)) <= atomR) {
+        if (qSqrt(sqr(x-xC3) + sqr(y-yC3)) <= atomR + electronR) {
 		xC = xC3;
 		yC = yC3;
 		act = true;
 	}
-	if (qSqrt(sqr(x-xC4) + sqr(y-yC4)) <= atomR) {
+        if (qSqrt(sqr(x-xC4) + sqr(y-yC4)) <= atomR + electronR) {
 		xC = xC4;
 		yC = yC4;
 		act = true;
@@ -198,7 +200,7 @@ void Model::checkAtom(QPointF& p, qreal& phi, QPointF pOld)
 		beta = atan2(y-yC, x-xC);
 		phi = 2*beta-phi-M_PI;
 
-		qreal R = atomR;
+                qreal R = atomR + electronR;
 
 		qreal x0 = pOld.x();
 		qreal y0 = pOld.y();
@@ -220,65 +222,98 @@ void Model::checkAtom(QPointF& p, qreal& phi, QPointF pOld)
 
 void Model::paint(QPainter *painter, QPaintEvent *event)
 {
-    QPointF p;
-    QRect rect = event->rect();
-    painter->fillRect(rect, background);
-
-    painter->save();
-
-	if (showBins) {
-		painter->setBrush(binBrush);
-		for (int i = 1; i < nbins; i++) {
-			qreal y = binwidth*i;
-			painter->drawLine(QPointF(y, 0), QPointF(y, (qreal)height));
-		}
-		painter->fillRect(QRectF(binwidth*bin, 0, binwidth, (qreal)height), binBrush);
-	}
-
-    painter->setBrush(atomBrush);
-    for (int i = yBegin; i < rect.height(); i += side) {
-        for (int j = xBegin; j < rect.width(); j += side) {
-            p.ry() = i;
-            p.rx() = j;
-            painter->drawEllipse(p, atomR, atomR);
+    if (paintTraceOnly) {
+        painter->save();
+        painter->setBrush(electronBrush);
+        for (int i = 0; i < num; i++) {
+            painter->drawEllipse(positions[i], electronR/5, electronR/5);
         }
+        painter->restore();
+        return;
     }
+    else {
+        QPointF p;
+        QRect rect = event->rect();
+        painter->fillRect(rect, background);
 
-    painter->setBrush(electronBrush); 
-    for (int i = 0; i < num; i++) {
-        painter->drawEllipse(positions[i], electronR, electronR);
+        painter->save();
+
+        if (showBins) {
+            painter->setBrush(binBrush);
+            for (int i = 1; i < nbins; i++) {
+                    qreal y = binwidth*i;
+                    painter->drawLine(QPointF(y, 0), QPointF(y, (qreal)height));
+            }
+            painter->fillRect(QRectF(binwidth*bin, 0, binwidth, (qreal)height), binBrush);
+        }
+
+        painter->setBrush(atomBrush);
+        for (int i = yBegin; i < rect.height(); i += side) {
+            for (int j = xBegin; j < rect.width(); j += side) {
+                p.ry() = i;
+                p.rx() = j;
+                painter->drawEllipse(p, atomR, atomR);
+            }
+        }
+
+        painter->setBrush(electronBrush);
+        for (int i = 0; i < num; i++) {
+            painter->drawEllipse(positions[i], electronR, electronR);
+        }
+
+        painter->restore();
     }
+}
 
-    painter->restore();
+void Model::setPaintTraceOnly(bool set)
+{
+    paintTraceOnly = set;
 }
 
 void Model::step(int elapsed)
 {
-	QPointF newP, curP, dP;
-	qreal s = speed * elapsed / 1000;
+    QPointF newP, curP, dP;
+    qreal s = speed * elapsed / 1000;
 
-	for (int i = 0; i < num; i++) {
-		dP.rx() = cos(speedDir[i]) * s;
-		dP.ry() = sin(speedDir[i]) * s;
-		curP = positions[i];
-		newP = curP + dP;
-		checkBorders(newP, speedDir[i]);
-		checkAtom(newP, speedDir[i], curP);
+    for (int i = 0; i < num; i++) {
+        dP.rx() = cos(speedDir[i]) * s;
+        dP.ry() = sin(speedDir[i]) * s;
+        curP = positions[i];
+        newP = curP + dP;
+        checkBorders(newP, speedDir[i]);
+        checkAtom(newP, speedDir[i], curP);
+        positions[i] = newP;
 
-		// probability estimation
-		if ((curP.x() >= bin*binwidth) && (curP.x() < (bin+1)*binwidth) &&
-				(newP.x() >= bin*binwidth) && (newP.x() < (bin+1)*binwidth))
-			timeInside += s;
-		timeFull += s;
+        if (!paintTraceOnly) {
+            // probability estimation
+            if ((curP.x() >= bin*binwidth) && (curP.x() < (bin+1)*binwidth) &&
+                            (newP.x() >= bin*binwidth) && (newP.x() < (bin+1)*binwidth))
+                    timeInside += s;
+            timeFull += s;
 
-		if (time.size() < MAX_HISTORY) {
-			time.push_back(timeFull);
-			prob.push_back(timeInside/timeFull);
-			impulses.push_back(impulseSum);
-		}
+            if (time.size() < MAX_HISTORY) {
+                    time.push_back(timeFull);
+                    prob.push_back(timeInside/timeFull);
+                    impulses.push_back(impulseSum);
+            }
+         }
+    }
 
-		positions[i] = newP;
-	}
-
-	time += timeStep;
+    if (!paintTraceOnly)
+        time += timeStep;
 }
+
+
+void Model::save()
+{
+    positions_save = positions;
+    speedDir_save  = speedDir;
+}
+
+void Model::load()
+{
+    positions = positions_save;
+    speedDir  = speedDir_save;
+}
+
+

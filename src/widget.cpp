@@ -8,6 +8,7 @@ static const int h = 400;
 Widget::Widget(Model *model, QWidget *parent)
     : QWidget(parent), model(model)
 {
+    showTrace = false;
     elapsed = 0;
     setFixedSize(w, h);
     model->setDim(w, h);
@@ -22,18 +23,42 @@ void Widget::animate()
     repaint();
 }
 
+void Widget::setTrace(bool set)
+{
+    showTrace = set;
+    repaint();
+}
+
+
+
 void Widget::paintEvent(QPaintEvent *event)
 {
     painter.begin(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-	model->paint(&painter, event);
-	if (vecBegin.x() >= 0) {
-		painter.setBrush(vecBrush);
-		painter.drawLine(vecBegin, vecEnd);
-	}
+    model->paint(&painter, event);
+    if (vecBegin.x() >= 0) {
+            painter.setBrush(vecBrush);
+            painter.drawLine(vecBegin, vecEnd);
+    }
 
-	painter.end();
+    if (showTrace) {
+        int sum = 0;
+        int step = 2;
+        int length = 1500;
+
+        model->save();
+        model->setPaintTraceOnly(true);
+        for (int i = 1; i <= length; i++) {
+            sum += step;
+            model->step(step);
+            model->paint(&painter, event);
+        }
+        model->setPaintTraceOnly(false);
+        model->load();
+    }
+
+    painter.end();
 }
 
 void Widget::mousePressEvent(QMouseEvent *event)
@@ -51,9 +76,17 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
 
 void Widget::mouseReleaseEvent(QMouseEvent *event)
 {
-	qreal angle = (2*M_PI / 360) * (rand() % 360);
-	if (vecBegin != vecEnd)
+        qreal angle;
+        qreal longEnough = 3;
+        if ((vecBegin - vecEnd).manhattanLength() >= longEnough)
+                // The direction is set by user
 		angle = (qreal)atan2(vecEnd.y()-vecBegin.y(), vecEnd.x()-vecBegin.x());
+        else
+                // The direction is default
+                if (randomDefDir)
+                    angle = (2*M_PI / 360) * (rand() % 360);
+                else
+                    angle = (2*M_PI / 360) * (defDir - 90);
 	model->add(vecBegin.x(), vecBegin.y(), angle);
 	vecBegin = QPoint(-1, -1);
 	repaint();
@@ -113,6 +146,16 @@ void Widget::setBinIndex(int val)
 {
 	model->setBinIndex(val-1);
 	repaint();
+}
+
+void Widget::setDefaultDirection(double dir)
+{
+        defDir = dir;
+}
+
+void Widget::setDefaultRandom(bool isRandom)
+{
+        randomDefDir = isRandom;
 }
 
 void Widget::clear()

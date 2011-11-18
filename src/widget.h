@@ -17,7 +17,7 @@ public:
 	QImage getImage();
 
 public slots:
-    void animate();
+    void animate();   
 	void setNumber(int);
 	void setSide(int);
 	void setSpeed(double);
@@ -26,6 +26,9 @@ public slots:
 	void setShowBins(bool);
 	void setBinsNumber(int);
 	void setBinIndex(int);
+        void setDefaultDirection(double);
+        void setDefaultRandom(bool);
+        void setTrace(bool);
 	void clear();
 
 signals:
@@ -44,6 +47,10 @@ private:
 
 	QPoint vecBegin, vecEnd;
 	QBrush vecBrush;
+
+        qreal defDir;
+        bool randomDefDir;
+        bool showTrace;
 };
 
 #endif

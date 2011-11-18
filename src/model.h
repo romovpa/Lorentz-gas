@@ -10,34 +10,38 @@
 class Model
 {
 public:
-	Model();
+    Model();
 
 public:
-	void step(int elapsed);
-	void add(int x, int y, qreal angle);
-	void clear();
+    void step(int elapsed);
+    void add(int x, int y, qreal angle);
+    void clear();
 
-	void paint(QPainter *painter, QPaintEvent *event);
-	void setDim(int w, int h);
+    void paint(QPainter *painter, QPaintEvent *event);
+    void setDim(int w, int h);
 
-	int getNumber();
+    int getNumber();
 
-	void setNumber(int newNum);
-	void setSide(int);
-	void setSpeed(qreal);
-	void setAtomR(qreal);
-	void setElectronR(qreal);
-	void setBinsNumber(int);
-	void setBinIndex(int);
+    void setNumber(int newNum);
+    void setSide(int);
+    void setSpeed(qreal);
+    void setAtomR(qreal);
+    void setElectronR(qreal);
+    void setBinsNumber(int);
+    void setBinIndex(int);
+    void setPaintTraceOnly(bool);
 
-	void setShowBins(bool);
+    void save();
+    void load();
 
-	static const qreal timeStep;
-	static const int MAX_HISTORY;
+    void setShowBins(bool);
+
+    static const qreal timeStep;
+    static const int MAX_HISTORY;
 
 private:
     void checkBorders(QPointF& p, qreal& phi);
-	void checkAtom(QPointF& p, qreal& phi, QPointF pOld);
+    void checkAtom(QPointF& p, qreal& phi, QPointF pOld);
 
     int width;
     int height;
@@ -48,25 +52,30 @@ private:
     QBrush background;
     QBrush atomBrush;
     QBrush electronBrush;
-	QBrush binBrush;
+    QBrush binBrush;
 
-	int side;
-	qreal atomR;
-	qreal electronR;
-	qreal speed;
+    int side;
+    qreal atomR;
+    qreal electronR;
+    qreal speed;
 
     int num;
     QVector<qreal> speedDir;
     QVector<QPointF> positions;
 
-	bool showBins;
-	int nbins, bin;
-	qreal binwidth;
+    QVector<qreal> speedDir_save;
+    QVector<QPointF> positions_save;
 
-	qreal timeFull, timeInside, impulseSum;
-	QVector<qreal> time;      // values of time
-	QVector<qreal> prob;      // magnitude of the bin
-	QVector<qreal> impulses;  // overall sum of collision impulses
+    bool paintTraceOnly;
+
+    bool showBins;
+    int nbins, bin;
+    qreal binwidth;
+
+    qreal timeFull, timeInside, impulseSum;
+    QVector<qreal> time;      // values of time
+    QVector<qreal> prob;      // magnitude of the bin
+    QVector<qreal> impulses;  // overall sum of collision impulses
 };
 
 #endif

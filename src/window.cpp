@@ -23,6 +23,7 @@ Window::Window(QWidget *parent)
 	connect(ui->togglePlayButton, SIGNAL(clicked()), this, SLOT(togglePlay()));
 	connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clearSettings()));
 	connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(saveShot()));
+        connect(ui->trailModeCheckBox, SIGNAL(toggled(bool)), this, SLOT(trailMode(bool)));
 
 	connect(native, SIGNAL(numberChanged(int)), ui->numberBox, SLOT(setValue(int)));
 	connect(ui->numberBox, SIGNAL(valueChanged(int)), native, SLOT(setNumber(int)));
@@ -33,6 +34,8 @@ Window::Window(QWidget *parent)
 	connect(ui->showBinsBox, SIGNAL(toggled(bool)), native, SLOT(setShowBins(bool)));
 	connect(ui->binsBox, SIGNAL(valueChanged(int)), this, SLOT(updateBinsNumber(int)));
 	connect(ui->binIndexBox, SIGNAL(valueChanged(int)), native, SLOT(setBinIndex(int)));
+        connect(ui->defDirBox, SIGNAL(valueChanged(double)), native, SLOT(setDefaultDirection(double)));
+        connect(ui->randomDefDirBox, SIGNAL(toggled(bool)), native, SLOT(setDefaultRandom(bool)));
 
 	native->setNumber(ui->numberBox->value());
 	native->setSide(ui->sideBox->value());
@@ -40,7 +43,12 @@ Window::Window(QWidget *parent)
 	native->setElectronR(ui->electronRadBox->value());
 	native->setSpeed(ui->speedBox->value());
 	native->setShowBins(ui->showBinsBox->checkState());
+        native->setDefaultDirection(ui->defDirBox->value());
+        native->setDefaultRandom(ui->randomDefDirBox->checkState());
 	updateBinsNumber(ui->binsBox->value());
+
+        trailMode(ui->trailModeCheckBox->checkState());
+        updateTogglePlayButton();
 }
 
 void Window::saveShot()
@@ -74,10 +82,30 @@ void Window::updateBinsNumber(int num)
 
 void Window::clearSettings()
 {
+        ui->trailModeCheckBox->setChecked(false);
 	ui->numberBox->setValue(0);
 	timer->stop();
 	updateTogglePlayButton();
 	model.clear();
+}
+
+void Window::trailMode(bool active)
+{
+        if (active) {
+            if (timer->isActive())
+                wasRunning = true;
+            else
+                wasRunning = false;
+            timer->stop();
+            ui->togglePlayButton->setEnabled(false);
+            native->setTrace(true);
+        }
+        else {
+            native->setTrace(false);
+            if (wasRunning)
+                timer->start();
+            ui->togglePlayButton->setEnabled(true);
+        }
 }
 
 void Window::keyPressEvent(QKeyEvent *e)

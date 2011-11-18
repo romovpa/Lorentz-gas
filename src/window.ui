@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>433</width>
-    <height>515</height>
+    <width>467</width>
+    <height>687</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_4">
-    <item row="0" column="0" rowspan="4">
+    <item row="0" column="0" rowspan="6">
      <layout class="QGridLayout" name="nativeLayout"/>
     </item>
     <item row="0" column="1">
@@ -29,35 +29,55 @@
       <property name="title">
        <string>Control</string>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QGridLayout" name="gridLayout_5">
        <property name="sizeConstraint">
         <enum>QLayout::SetMinimumSize</enum>
        </property>
-       <item>
+       <item row="0" column="1">
         <widget class="QPushButton" name="togglePlayButton">
          <property name="text">
           <string>Play</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="0" column="2">
         <widget class="QPushButton" name="clearButton">
          <property name="text">
           <string>Clear</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="0" column="3">
         <widget class="QPushButton" name="saveButton">
          <property name="text">
           <string>Save</string>
          </property>
         </widget>
        </item>
+       <item row="1" column="2" colspan="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="trailModeCheckBox">
+         <property name="text">
+          <string>Trail mode</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
-    <item row="1" column="1">
+    <item row="1" column="1" rowspan="2">
      <widget class="QGroupBox" name="settingsBox">
       <property name="title">
        <string>Settings</string>
@@ -68,7 +88,7 @@
          <item row="0" column="0">
           <widget class="QLabel" name="pointsLabel">
            <property name="text">
-            <string>Points:</string>
+            <string>Electrons:</string>
            </property>
           </widget>
          </item>
@@ -94,7 +114,7 @@
             <bool>false</bool>
            </property>
            <property name="text">
-            <string>&lt;i&gt;Click to the model to add an electron, pull the cursor clicked to set the direction vector.&lt;/i&gt;</string>
+            <string>&lt;i&gt;Click on the field to add an electron, then drag the cursor to set the direction vector or just click to use default direction.&lt;/i&gt;</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
@@ -106,7 +126,7 @@
        <item>
         <layout class="QGridLayout" name="gridLayout_2">
          <property name="sizeConstraint">
-          <enum>QLayout::SetFixedSize</enum>
+          <enum>QLayout::SetDefaultConstraint</enum>
          </property>
          <item row="0" column="0">
           <widget class="QLabel" name="sideLabel">
@@ -124,7 +144,7 @@
             <number>400</number>
            </property>
            <property name="value">
-            <number>25</number>
+            <number>50</number>
            </property>
           </widget>
          </item>
@@ -144,7 +164,7 @@
             <double>400.000000000000000</double>
            </property>
            <property name="value">
-            <double>5.000000000000000</double>
+            <double>10.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -164,7 +184,7 @@
             <double>400.000000000000000</double>
            </property>
            <property name="value">
-            <double>2.000000000000000</double>
+            <double>4.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -177,6 +197,9 @@
          </item>
          <item row="3" column="1">
           <widget class="QDoubleSpinBox" name="speedBox">
+           <property name="specialValueText">
+            <string/>
+           </property>
            <property name="minimum">
             <double>0.100000000000000</double>
            </property>
@@ -188,12 +211,45 @@
            </property>
           </widget>
          </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="defDirLabel">
+           <property name="text">
+            <string>Default direction (°):</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QDoubleSpinBox" name="defDirBox">
+           <property name="specialValueText">
+            <string/>
+           </property>
+           <property name="minimum">
+            <double>0.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>360.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>23.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0" colspan="2">
+          <widget class="QCheckBox" name="randomDefDirBox">
+           <property name="text">
+            <string>Random default direction</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="4" column="1">
      <widget class="QGroupBox" name="probabilitySettingsBox">
       <property name="title">
        <string>Probability Estimation</string>
@@ -250,7 +306,7 @@
       </layout>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="5" column="1">
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
