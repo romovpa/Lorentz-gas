@@ -22,7 +22,7 @@ Model::Model()
 	num = 0;
 	bin = 0;
 
-        paintTraceOnly = false;
+	paintTraceOnly = false;
 
     background = QBrush(Qt::white);
     atomBrush = QBrush(Qt::black);
@@ -69,8 +69,26 @@ void Model::setNumber(int newNum)
 	while (newNum > num) {
 		// add a new electron
 		// with random position and direction
-		int x = rand() % width;
-		int y = rand() % height;
+		qreal x, y;
+		for (int trial = 1; trial < 10; trial++) {
+			x = rand() % width;
+			y = rand() % height;
+
+			qreal xC1 = ceil((x-xBegin)/side) * side + xBegin;
+			qreal yC1 = ceil((y-yBegin)/side) * side + yBegin;
+			qreal xC2 = ceil((x-xBegin)/side) * side + xBegin;
+			qreal yC2 = floor((y-yBegin)/side) * side + yBegin;
+			qreal xC3 = floor((x-xBegin)/side) * side + xBegin;
+			qreal yC3 = floor((y-yBegin)/side) * side + yBegin;
+			qreal xC4 = floor((x-xBegin)/side) * side + xBegin;
+			qreal yC4 = ceil((y-yBegin)/side) * side + yBegin;
+
+			if (qSqrt(sqr(x-xC1) + sqr(y-yC1)) > atomR + electronR &&
+				qSqrt(sqr(x-xC2) + sqr(y-yC2)) > atomR + electronR &&
+				qSqrt(sqr(x-xC3) + sqr(y-yC3)) > atomR + electronR &&
+				qSqrt(sqr(x-xC4) + sqr(y-yC4)) > atomR + electronR)
+				break;
+		}
 		int angle = rand() % 360;
 		positions.append(QPointF(x, y));
 		speedDir.append((2*M_PI / 360) * angle);
@@ -174,22 +192,22 @@ void Model::checkAtom(QPointF& p, qreal& phi, QPointF pOld)
 
         qreal xC = 1, yC = 1;
 	bool act = false;
-        if (qSqrt(sqr(x-xC1) + sqr(y-yC1)) <= atomR + electronR) {
+	if (qSqrt(sqr(x-xC1) + sqr(y-yC1)) <= atomR + electronR) {
 		xC = xC1;
 		yC = yC1;
 		act = true;
 	}
-        if (qSqrt(sqr(x-xC2) + sqr(y-yC2)) <= atomR + electronR) {
+	if (qSqrt(sqr(x-xC2) + sqr(y-yC2)) <= atomR + electronR) {
 		xC = xC2;
 		yC = yC2;
 		act = true;
 	}
-        if (qSqrt(sqr(x-xC3) + sqr(y-yC3)) <= atomR + electronR) {
+	if (qSqrt(sqr(x-xC3) + sqr(y-yC3)) <= atomR + electronR) {
 		xC = xC3;
 		yC = yC3;
 		act = true;
 	}
-        if (qSqrt(sqr(x-xC4) + sqr(y-yC4)) <= atomR + electronR) {
+	if (qSqrt(sqr(x-xC4) + sqr(y-yC4)) <= atomR + electronR) {
 		xC = xC4;
 		yC = yC4;
 		act = true;
@@ -200,7 +218,7 @@ void Model::checkAtom(QPointF& p, qreal& phi, QPointF pOld)
 		beta = atan2(y-yC, x-xC);
 		phi = 2*beta-phi-M_PI;
 
-                qreal R = atomR + electronR;
+		qreal R = atomR + electronR;
 
 		qreal x0 = pOld.x();
 		qreal y0 = pOld.y();
