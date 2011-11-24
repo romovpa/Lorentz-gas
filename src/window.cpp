@@ -13,6 +13,11 @@ Window::Window(QWidget *parent)
 	ui->setupUi(this);
 	setWindowTitle(tr("Physics"));
 
+	QIcon appIcon;
+	appIcon.addFile(":/resources/app.png", QSize(16,16));
+	appIcon.addFile(":/resources/app32.png", QSize(32,32));
+	setWindowIcon(appIcon);
+
 	native = new Widget(&model, this);
 	ui->nativeLayout->addWidget(native, 0, 0);
 
@@ -50,6 +55,8 @@ Window::Window(QWidget *parent)
 
 	trailMode(ui->trailModeCheckBox->checkState());
 	updateTogglePlayButton();
+
+	adjustSize();
 }
 
 void Window::saveShot()
