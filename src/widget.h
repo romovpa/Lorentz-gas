@@ -10,14 +10,14 @@ class Model;
 
 class Widget : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    Widget(Model *model, QWidget *parent);
+	Widget(Model *model, QWidget *parent);
 	QImage getImage();
 
 public slots:
-    void animate();   
+	void animate();
 	void setNumber(int);
 	void setSide(int);
 	void setSpeed(double);
@@ -26,31 +26,31 @@ public slots:
 	void setShowBins(bool);
 	void setBinsNumber(int);
 	void setBinIndex(int);
-        void setDefaultDirection(double);
-        void setDefaultRandom(bool);
-        void setTrace(bool);
+	void setDefaultDirection(double);
+	void setDefaultRandom(bool);
+	void setTrace(bool);
 	void clear();
 
 signals:
 	void numberChanged(int);
 
 protected:
-    void paintEvent(QPaintEvent *event);
+	void paintEvent(QPaintEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-    QPainter painter;
+	QPainter painter;
 	Model *model;
-    int elapsed;
+	int elapsed;
 
 	QPoint vecBegin, vecEnd;
 	QBrush vecBrush;
 
-        qreal defDir;
-        bool randomDefDir;
-        bool showTrace;
+	qreal defDir;
+	bool randomDefDir;
+	bool showTrace;
 };
 
 #endif

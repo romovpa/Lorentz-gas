@@ -14,21 +14,21 @@ namespace Ui {
 
 class Window : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
 	explicit Window(QWidget *parent = 0);
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
 protected slots:
 	void saveShot();
-        void togglePlay();
-        void clearSettings();
+	void togglePlay();
+	void clearSettings();
 	void updateTogglePlayButton();
 	void updateBinsNumber(int);
-        void trailMode(bool active);
+	void trailMode(bool active);
 
 private:
 	Ui::Window *ui;

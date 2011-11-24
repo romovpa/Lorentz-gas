@@ -8,7 +8,7 @@ static const int refresh_rate = 50;
 
 Window::Window(QWidget *parent)
 	: QMainWindow(parent),
-	  ui(new Ui::Window)
+	ui(new Ui::Window)
 {
 	ui->setupUi(this);
 	setWindowTitle(tr("Physics"));
@@ -83,7 +83,7 @@ void Window::updateBinsNumber(int num)
 
 void Window::clearSettings()
 {
-        ui->trailModeCheckBox->setChecked(false);
+	ui->trailModeCheckBox->setChecked(false);
 	ui->numberBox->setValue(0);
 	timer->stop();
 	updateTogglePlayButton();
@@ -92,27 +92,27 @@ void Window::clearSettings()
 
 void Window::trailMode(bool active)
 {
-        if (active) {
-            if (timer->isActive())
-                wasRunning = true;
-            else
-                wasRunning = false;
-			timer->stop();
-            ui->togglePlayButton->setEnabled(false);
-            native->setTrace(true);
-        }
-        else {
-            native->setTrace(false);
-			if (wasRunning)
-				timer->start();
-            ui->togglePlayButton->setEnabled(true);
-        }
+	if (active) {
+		if (timer->isActive())
+			wasRunning = true;
+		else
+			wasRunning = false;
+		timer->stop();
+		ui->togglePlayButton->setEnabled(false);
+		native->setTrace(true);
+	}
+	else {
+		native->setTrace(false);
+		if (wasRunning)
+			timer->start();
+		ui->togglePlayButton->setEnabled(true);
+	}
 }
 
 void Window::keyPressEvent(QKeyEvent *e)
 {
-    if (e->key() == Qt::Key_Escape)
-        close();
-    else
-        QWidget::keyPressEvent(e);
+	if (e->key() == Qt::Key_Escape)
+		close();
+	else
+		QWidget::keyPressEvent(e);
 }
