@@ -25,6 +25,7 @@ Model::Model()
 	paintTraceOnly = false;
 
 	background = QBrush(Qt::white);
+	traceBrush = QBrush(Qt::black);
 	atomBrush = QBrush(Qt::black);
 	electronBrush = QBrush(Qt::red);
 	binBrush = QBrush(Qt::cyan);
@@ -242,9 +243,9 @@ void Model::paint(QPainter *painter, QPaintEvent *event)
 {
 	if (paintTraceOnly) {
 		painter->save();
-		painter->setBrush(electronBrush);
+		painter->setBrush(traceBrush);
 		for (int i = 0; i < num; i++) {
-			painter->drawEllipse(positions[i], electronR/5, electronR/5);
+			painter->drawEllipse(positions[i], 1, 1);
 		}
 		painter->restore();
 		return;

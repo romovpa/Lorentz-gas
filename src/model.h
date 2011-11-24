@@ -50,6 +50,7 @@ private:
 	int yBegin;
 
 	QBrush background;
+	QBrush traceBrush;
 	QBrush atomBrush;
 	QBrush electronBrush;
 	QBrush binBrush;
