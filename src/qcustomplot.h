@@ -58,7 +58,7 @@ class QCustomPlotDataFetcher
 public:
   //explicit QCustomPlotDataFetcher(QCustomPlot *parentplot);
   virtual void fetch(int inId, const QCustomPlotRange &inRange, int &outN, double *outKey, double *outValue) = 0;
-  
+
 };
 
 class QCustomPlotData
@@ -74,55 +74,55 @@ class QCustomPlotGraph
 {
 public:
   /*!
-    Defines how the graph's line is represented visually in the plot. The line is drawn with the
-    current pen of the graph (\ref setPen).
-    \see setLineStyle
+	Defines how the graph's line is represented visually in the plot. The line is drawn with the
+	current pen of the graph (\ref setPen).
+	\see setLineStyle
   */
   enum LineStyle {lsNone,       ///< data points are not connected with any lines (e.g. data only represented
-                                ///< with symbols according to the scatter style, see \ref setScatterStyle)
-                  lsLine,       ///< data points are connected by a straight line
-                  lsStepLeft,   ///< line is drawn as steps where the step height is the value of the left data point
-                  lsStepRight,  ///< line is drawn as steps where the step height is the value of the right data point
-                  lsStepCenter, ///< line is drawn as steps where the step is in between two data points
-                  lsImpulse     ///< data points are represented by a straight line parallel to the value axis, which ranges down/up to the key axis
-                 };
-  
+								///< with symbols according to the scatter style, see \ref setScatterStyle)
+				  lsLine,       ///< data points are connected by a straight line
+				  lsStepLeft,   ///< line is drawn as steps where the step height is the value of the left data point
+				  lsStepRight,  ///< line is drawn as steps where the step height is the value of the right data point
+				  lsStepCenter, ///< line is drawn as steps where the step is in between two data points
+				  lsImpulse     ///< data points are represented by a straight line parallel to the value axis, which ranges down/up to the key axis
+				 };
+
   /*!
-    This defines the visual appearance of the points, which are all drawn with the pen of the graph
-    (\ref setPen). The sizes of these visualizations (with exception of \ref ssDot and \ref ssPixmap) can be
-    set with \ref setScatterSize.
-    \see setScatterStyle
+	This defines the visual appearance of the points, which are all drawn with the pen of the graph
+	(\ref setPen). The sizes of these visualizations (with exception of \ref ssDot and \ref ssPixmap) can be
+	set with \ref setScatterSize.
+	\see setScatterStyle
   */
   enum ScatterStyle {ssNone,     ///< no scatter symbols are drawn (e.g. data only represented with lines, see \ref setLineStyle)
-                     ssDot,      ///< a single pixel, \ref setScatterSize has no influence on its size.
-                     ssCross,    ///< a cross (x)
-                     ssPlus,     ///< a plus (+)
-                     ssCircle,   ///< a circle which is not filled
-                     ssDisc,     ///< a circle which is filled with the color of the graph's pen (not the brush!)
-                     ssSquare,   ///< a square which is not filled
-                     ssStar,     ///< a star with eight arms, i.e. a combination of cross and plus
-                     ssTriangle, ///< an equilateral triangle which is not filled, standing on baseline
-                     ssTriangleInverted, ///< an equilateral triangle which is not filled, standing on corner
-                     ssCrossSquare,      ///< a square which is not filled, with a cross inside
-                     ssPlusSquare,       ///< a square which is not filled, with a plus inside
-                     ssCrossCircle,      ///< a circle which is not filled, with a cross inside
-                     ssPlusCircle,       ///< a circle which is not filled, with a plus inside
-                     ssPeace,    ///< a circle which is not filled, with one vertical and two downward diagonal lines
-                     ssPixmap    ///< a custom pixmap specified by setScatterPixmap, centered on the data point coordinates. \ref setScatterSize has no influence on its size.
-                    };
-  
+					 ssDot,      ///< a single pixel, \ref setScatterSize has no influence on its size.
+					 ssCross,    ///< a cross (x)
+					 ssPlus,     ///< a plus (+)
+					 ssCircle,   ///< a circle which is not filled
+					 ssDisc,     ///< a circle which is filled with the color of the graph's pen (not the brush!)
+					 ssSquare,   ///< a square which is not filled
+					 ssStar,     ///< a star with eight arms, i.e. a combination of cross and plus
+					 ssTriangle, ///< an equilateral triangle which is not filled, standing on baseline
+					 ssTriangleInverted, ///< an equilateral triangle which is not filled, standing on corner
+					 ssCrossSquare,      ///< a square which is not filled, with a cross inside
+					 ssPlusSquare,       ///< a square which is not filled, with a plus inside
+					 ssCrossCircle,      ///< a circle which is not filled, with a cross inside
+					 ssPlusCircle,       ///< a circle which is not filled, with a plus inside
+					 ssPeace,    ///< a circle which is not filled, with one vertical and two downward diagonal lines
+					 ssPixmap    ///< a custom pixmap specified by setScatterPixmap, centered on the data point coordinates. \ref setScatterSize has no influence on its size.
+					};
+
   /*!
-    Defines what kind of error bars are drawn for each data point
+	Defines what kind of error bars are drawn for each data point
   */
   enum ErrorType {etNone,  ///< No error bars are shown
-                  etKey,   ///< Error bars for the key dimension of the data point are shown
-                  etValue, ///< Error bars for the value dimension of the data point are shown
-                  etBoth   ///< Error bars for both key and value dimensions of the data point are shown
-                 };
-  
+				  etKey,   ///< Error bars for the key dimension of the data point are shown
+				  etValue, ///< Error bars for the value dimension of the data point are shown
+				  etBoth   ///< Error bars for both key and value dimensions of the data point are shown
+				 };
+
   explicit QCustomPlotGraph(QCustomPlotAxis *keyaxis, QCustomPlotAxis *valueaxis);
   ~QCustomPlotGraph();
-  
+
   // getters:
   QString name() const { return mName; }
   QPen pen() const { return mPen; }
@@ -140,7 +140,7 @@ public:
   double errorBarSize() const { return mErrorBarSize; }
   bool errorBarSkipSymbol() const { return mErrorBarSkipSymbol; }
   QCustomPlotGraph *channelFillGraph() const { return mChannelFillGraph; }
-  
+
   // setters:
   void setName(const QString &str);
   void setPen(const QPen &p);
@@ -165,7 +165,7 @@ public:
   void setErrorBarSize(double size);
   void setErrorBarSkipSymbol(bool enabled);
   void setChannelFillGraph(QCustomPlotGraph *targetGraph);
-  
+
   // non-property methods:
   void addData(const QCustomPlotDataMap &dataMap);
   void addData(const QCustomPlotData &data);
@@ -179,7 +179,7 @@ public:
   void rescaleAxes(bool onlyEnlarge=false, bool includeErrorBars=true);
   void rescaleKeyAxis(bool onlyEnlarge=false, bool includeErrorBars=true);
   void rescaleValueAxis(bool onlyEnlarge=false, bool includeErrorBars=true);
-  
+
 protected:
   QCustomPlot *mParentPlot;
   QCustomPlotAxis *mKeyAxis, *mValueAxis;
@@ -196,10 +196,10 @@ protected:
   double mErrorBarSize;
   bool mErrorBarSkipSymbol;
   QCustomPlotGraph *mChannelFillGraph;
-  
+
   // main draw function, called by QCustomPlot::drawGraphs:
   void draw(QPainter *painter) const;
-  
+
   // functions to generate plot data points in pixel coordinates:
   void getPlotData(QVector<QPointF> *lineData, QVector<QCustomPlotData> *pointData) const;
   // plot style specific functions to generate plot data, used by getPlotData:
@@ -209,7 +209,7 @@ protected:
   void getStepRightPlotData(QVector<QPointF> *lineData, QVector<QCustomPlotData> *pointData) const;
   void getStepCenterPlotData(QVector<QPointF> *lineData, QVector<QCustomPlotData> *pointData) const;
   void getImpulsePlotData(QVector<QPointF> *lineData, QVector<QCustomPlotData> *pointData) const;
-  
+
   // helper functions for drawing:
   void drawFill(QPainter *painter, QVector<QPointF> *lineData) const;
   void drawScatterPlot(QPainter *painter, QVector<QCustomPlotData> *pointData) const;
@@ -217,10 +217,10 @@ protected:
   void drawImpulsePlot(QPainter *painter, QVector<QPointF> *lineData) const;
   void drawScatter(QPainter *painter, double x, double y, ScatterStyle style) const;
   void drawError(QPainter *painter, double x, double y, const QCustomPlotData &data) const;
-  
+
   // draw function for representing this graph in QCustomPlotLegend:
   void drawLegendIcon(QPainter *painter, const QRect &rect) const;
-  
+
   // helper functions:
   void getVisibleDataBounds(QCustomPlotDataMap::const_iterator &lower, QCustomPlotDataMap::const_iterator &upper, int &count) const;
   void addFillBasePoints(QVector<QPointF> *lineData) const;
@@ -234,7 +234,7 @@ protected:
   int findIndexAboveY(const QVector<QPointF> *data, double y) const;
   const QCustomPlotRange getKeyRange(bool &validRange, bool includeErrors=false, int restrictToSign=0) const;
   const QCustomPlotRange getValueRange(bool &validRange, bool includeErrors=false, int restrictToSign=0) const;
-  
+
   friend class QCustomPlot;
   friend class QCustomPlotLegend;
 };
@@ -250,7 +250,7 @@ public:
   void normalize();
   QCustomPlotRange sanitizedForLogScale() const;
   QCustomPlotRange sanitizedForLinScale() const;
-  
+
   static bool validRange(double lower, double upper);
   static bool validRange(const QCustomPlotRange &range);
   static const double minRange; //1e-280;
@@ -262,23 +262,23 @@ class QCustomPlotLegend : public QObject
   Q_OBJECT
 public:
   /*!
-    Defines where the legend is positioned inside the QCustomPlot axis rect.
+	Defines where the legend is positioned inside the QCustomPlot axis rect.
   */
   enum PositionStyle {psManual,      ///< Position is not changed automatically. Set manually via \ref setPosition
-                      psTopLeft,     ///< Legend is positioned in the top left corner of the axis rect with distance to the border corresponding to the currently set top and left margins
-                      psTop,         ///< Legend is horizontally centered at the top of the axis rect with distance to the border corresponding to the currently set top margin
-                      psTopRight,    ///< Legend is positioned in the top right corner of the axis rect with distance to the border corresponding to the currently set top and right margins
-                      psRight,       ///< Legend is vertically centered at the right of the axis rect with distance to the border corresponding to the currently set right margin
-                      psBottomRight, ///< Legend is positioned in the bottom right corner of the axis rect with distance to the border corresponding to the currently set bottom and right margins
-                      psBottom,      ///< Legend is horizontally centered at the bottom of the axis rect with distance to the border corresponding to the currently set bottom margin
-                      psBottomLeft,  ///< Legend is positioned in the bottom left corner of the axis rect with distance to the border corresponding to the currently set bottom and left margins
-                      psLeft         ///< Legend is vertically centered at the left of the axis rect with distance to the border corresponding to the currently set left margin
-                     };
+					  psTopLeft,     ///< Legend is positioned in the top left corner of the axis rect with distance to the border corresponding to the currently set top and left margins
+					  psTop,         ///< Legend is horizontally centered at the top of the axis rect with distance to the border corresponding to the currently set top margin
+					  psTopRight,    ///< Legend is positioned in the top right corner of the axis rect with distance to the border corresponding to the currently set top and right margins
+					  psRight,       ///< Legend is vertically centered at the right of the axis rect with distance to the border corresponding to the currently set right margin
+					  psBottomRight, ///< Legend is positioned in the bottom right corner of the axis rect with distance to the border corresponding to the currently set bottom and right margins
+					  psBottom,      ///< Legend is horizontally centered at the bottom of the axis rect with distance to the border corresponding to the currently set bottom margin
+					  psBottomLeft,  ///< Legend is positioned in the bottom left corner of the axis rect with distance to the border corresponding to the currently set bottom and left margins
+					  psLeft         ///< Legend is vertically centered at the left of the axis rect with distance to the border corresponding to the currently set left margin
+					 };
   //Q_ENUMS(PositionStyle)
-  
+
   explicit QCustomPlotLegend(QCustomPlot *parentPlot);
   ~QCustomPlotLegend();
-  
+
   // getters:
   QPen borderPen() const { return mBorderPen; }
   QBrush brush() const { return mBrush; }
@@ -300,7 +300,7 @@ public:
   QSize iconSize() const { return mIconSize; }
   int iconTextPadding() const { return mIconTextPadding; }
   QPen iconBorderPen() const { return mIconBorderPen; }
-  
+
   // setters:
   void setBorderPen(const QPen &pen);
   void setBrush(const QBrush &brush);
@@ -326,7 +326,7 @@ public:
   void setIconSize(int width, int height);
   void setIconTextPadding(int padding);
   void setIconBorderPen(const QPen &pen);
-  
+
   // non-property methods:
   QCustomPlotGraph *graph(int i) const;
   int graphCount() const;
@@ -336,9 +336,9 @@ public:
   void addGraphs(const QList<QCustomPlotGraph*> &graphList);
   bool removeGraph(QCustomPlotGraph *graph);
   void removeGraphs(const QList<QCustomPlotGraph*> &graphList);
-  
+
   void reArrange();
-  
+
 protected:
   // simple properties with getters and setters:
   QPen mBorderPen, mIconBorderPen;
@@ -351,16 +351,16 @@ protected:
   int mPaddingLeft, mPaddingRight, mPaddingTop, mPaddingBottom;
   int mMarginLeft, mMarginRight, mMarginTop, mMarginBottom;
   int mItemSpacing, mIconTextPadding;
-  
+
   // internal or not explicitly exposed properties:
   QCustomPlot *mParentPlot;
   QList<QCustomPlotGraph*> mGraphs;
-  
+
   // introduced methods:
   virtual void draw(QPainter *painter);
   virtual void calculateAutoSize();
   virtual void calculateAutoPosition();
-  
+
   friend class QCustomPlot;
 };
 
@@ -407,35 +407,35 @@ class QCustomPlotAxis : public QObject
   /// \endcond
 public:
   /*!
-    Defines at which side of the axis rect the axis will appear. This also affects how the tick
-    marks are drawn, on which side the labels are placed etc.
-    \see setAxisType
+	Defines at which side of the axis rect the axis will appear. This also affects how the tick
+	marks are drawn, on which side the labels are placed etc.
+	\see setAxisType
   */
   enum AxisType {atLeft,  ///< Axis is vertical and on the left side of the axis rect of the parent QCustomPlot
-                 atRight, ///< Axis is vertical and on the right side of the axis rect of the parent QCustomPlot
-                 atTop,   ///< Axis is horizontal and on the top side of the axis rect of the parent QCustomPlot
-                 atBottom ///< Axis is horizontal and on the bottom side of the axis rect of the parent QCustomPlot
-                };
+				 atRight, ///< Axis is vertical and on the right side of the axis rect of the parent QCustomPlot
+				 atTop,   ///< Axis is horizontal and on the top side of the axis rect of the parent QCustomPlot
+				 atBottom ///< Axis is horizontal and on the bottom side of the axis rect of the parent QCustomPlot
+				};
   /*!
-    When automatic tick label generation is enabled (\ref setAutoTickLabels), defines how the
-    numerical value (coordinate) of the tick position is translated into a string that will be
-    drawn at the tick position.
-    \see setTickLabelType
+	When automatic tick label generation is enabled (\ref setAutoTickLabels), defines how the
+	numerical value (coordinate) of the tick position is translated into a string that will be
+	drawn at the tick position.
+	\see setTickLabelType
   */
   enum LabelType {ltNumber,  ///< Tick coordinate is regarded as normal number and will be displayed as such. (see \ref setNumberFormat)
-                  ltDateTime ///< Tick coordinate is regarded as a date/time (seconds since 1970-01-01T00:00:00 UTC, see QDateTime::toTime_t) and will be displayed and formatted as such. (see \ref setDateTimeFormat)
-                 };
+				  ltDateTime ///< Tick coordinate is regarded as a date/time (seconds since 1970-01-01T00:00:00 UTC, see QDateTime::toTime_t) and will be displayed and formatted as such. (see \ref setDateTimeFormat)
+				 };
   /*!
-    Defines the scale of an axis.
-    \see setScaleType
+	Defines the scale of an axis.
+	\see setScaleType
   */
   enum ScaleType {stLinear,     ///< Normal linear scaling
-                  stLogarithmic ///< Logarithmic scaling with correspondingly transformed plots and (major) tick marks at every base power (see \ref setScaleLogBase).
-                 };
-  
+				  stLogarithmic ///< Logarithmic scaling with correspondingly transformed plots and (major) tick marks at every base power (see \ref setScaleLogBase).
+				 };
+
   explicit QCustomPlotAxis(QCustomPlot *parentPlot, AxisType type);
   ~QCustomPlotAxis();
-      
+
   // getters:
   QCustomPlotDataFetcher *dataFetcher() const { return mDataFetcher; }
   AxisType axisType() const { return mAxisType; }
@@ -474,7 +474,7 @@ public:
   QFont labelFont() const { return mLabelFont; }
   QString label() const { return mLabel; }
   int labelPadding() const { return mLabelPadding; }
-  
+
   // setters:
   void setDataFetcher(QCustomPlotDataFetcher *fetcher);
   void setScaleType(ScaleType type);
@@ -514,14 +514,14 @@ public:
   void setLabelFont(const QFont &font);
   void setLabel(const QString &str);
   void setLabelPadding(int padding);
-  
+
   // non-property methods:
   void moveRange(double diff);
   void scaleRange(double factor, double center);
   void setScaleRatio(const QCustomPlotAxis *otherAxis, double ratio=1.0);
   double pixelToCoord(double value) const;
   double coordToPixel(double value) const;
-  
+
 public slots:
   // slot setters:
   void setRange(const QCustomPlotRange &range);
@@ -547,7 +547,7 @@ protected:
   int mTickLabelPadding, mLabelPadding;
   double mTickLabelRotation;
   bool mVisible, mGrid, mSubGrid, mTicks, mTickLabels, mAutoTicks, mAutoTickLabels, mAutoTickStep, mAutoSubTicks;
-  
+
   // internal or not explicitly exposed properties:
   QCustomPlot *mParentPlot;
   QVector<double> *mSubTickVector;
@@ -555,11 +555,11 @@ protected:
   int mNumberPrecision;
   char mNumberFormatChar;
   bool mNumberBeautifulPowers, mNumberMultiplyCross;
-  
+
   // internal setters:
   void setAxisType(AxisType type);
   void setAxisRect(const QRect &rect);
-  
+
   // introduced methods:
   virtual void generateTickVectors();
   virtual void generateAutoTicks();
@@ -570,16 +570,16 @@ protected:
   virtual void drawAxis(QPainter *painter);
   virtual void drawTickLabel(QPainter *painter, double position, const QString &text, QSize *tickLabelsSize);
   virtual void getMaxTickLabelSize(const QFont &font, const QString &text, QSize *tickLabelsSize) const;
- 
+
   // basic non virtual helpers:
   void visibleTickBounds(int &lowIndex, int &highIndex) const;
   double baseLog(double value) const;
   double basePow(double value) const;
-  
+
 signals:
   void ticksRequest();
   void rangeChanged(const QCustomPlotRange &newRange);
-  
+
   friend class QCustomPlot;
   friend class QCustomPlotGraph;
 };
@@ -601,25 +601,25 @@ class QCustomPlot : public QWidget
   /// \endcond
 public:
   /*!
-    Defines what elements of a plot will be drawn antialiased.
-    
-    \c AntialiasedElements is a flag of or-combined elements of this enum type.
-    \see setAntialiasedElements, setAntialiasedElement
+	Defines what elements of a plot will be drawn antialiased.
+
+	\c AntialiasedElements is a flag of or-combined elements of this enum type.
+	\see setAntialiasedElements, setAntialiasedElement
   */
   enum AntialiasedElement {aeAxes      = 0x01, ///< Axis base line and tick marks
-                           aeGrid      = 0x02, ///< Grid lines
-                           aeSubGrid   = 0x04, ///< Sub grid lines
-                           aeGraphs    = 0x08, ///< Any lines of graphs (excluding error bars, see element \ref aeErrorBars)
-                           aeScatters  = 0x10, ///< Scatter symbols of graphs (excluding scatter symbols of type \ref ssPixmap)
-                           aeErrorBars = 0x20, ///< Error bars
-                           aeFills     = 0x40  ///< Borders of fills under or between graphs
-                          };
+						   aeGrid      = 0x02, ///< Grid lines
+						   aeSubGrid   = 0x04, ///< Sub grid lines
+						   aeGraphs    = 0x08, ///< Any lines of graphs (excluding error bars, see element \ref aeErrorBars)
+						   aeScatters  = 0x10, ///< Scatter symbols of graphs (excluding scatter symbols of type \ref ssPixmap)
+						   aeErrorBars = 0x20, ///< Error bars
+						   aeFills     = 0x40  ///< Borders of fills under or between graphs
+						  };
   Q_ENUMS(AntialiasedElement)
   Q_DECLARE_FLAGS(AntialiasedElements, AntialiasedElement)
-  
+
   explicit QCustomPlot(QWidget *parent = 0);
   ~QCustomPlot();
-  
+
   // getters:
   QString title() const { return mTitle; }
   QFont titleFont() const { return mTitleFont; }
@@ -637,7 +637,7 @@ public:
   double rangeZoomFactor(Qt::Orientation orientation);
   const AntialiasedElements antialiasedElements() const { return mAntialiasedElements; }
   bool autoAddGraphToLegend() const { return mAutoAddGraphToLegend; }
-  
+
   // setters:
   void setTitle(const QString &title);
   void setTitleFont(const QFont &font);
@@ -658,7 +658,7 @@ public:
   void setAntialiasedElements(const AntialiasedElements &antialiasedElements);
   void setAntialiasedElement(AntialiasedElement antialiasedElement, bool enabled);
   void setAutoAddGraphToLegend(bool on);
-  
+
   // non-property methods:
   QCustomPlotGraph *graph(int index);
   QCustomPlotGraph *graph();
@@ -672,10 +672,10 @@ public:
   //void saveSvg(const QString &fileName);
   void savePng(const QString &fileName, int width=0, int height=0);
   void savePngScaled(const QString &fileName, double scale, int width=0, int height=0);
-  
+
   QCustomPlotAxis *xAxis, *yAxis, *xAxis2, *yAxis2;
   QCustomPlotLegend *legend;
-  
+
 protected:
   QPixmap buffer;
   QString mTitle;
@@ -693,7 +693,7 @@ protected:
   QPoint mDragStart;
   QCustomPlotRange mDragStartHorzRange, mDragStartVertRange;
   QFlags<AntialiasedElement> mAntialiasedElements;
-  
+
   // reimplemented methods:
   virtual void paintEvent(QPaintEvent *event);
   virtual void resizeEvent(QResizeEvent *event);
@@ -702,20 +702,20 @@ protected:
   virtual void mouseMoveEvent(QMouseEvent *event);
   virtual void mouseReleaseEvent(QMouseEvent *event);
   virtual void wheelEvent(QWheelEvent *event);
-     
+
   // introduced methods:
   virtual void draw(QPainter *painter);
-  
+
   // helpers:
   void updateAxisRect();
-  
+
 signals:
   void mouseDoubleClick(QMouseEvent *event);
   void mousePress(QMouseEvent *event);
   void mouseMove(QMouseEvent *event);
   void mouseRelease(QMouseEvent *event);
   void mouseWheel(QWheelEvent *event);
-  
+
 public slots:
 
   friend class QCustomPlotLegend;

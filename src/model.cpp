@@ -6,7 +6,7 @@
 #include <math.h>
 #include <assert.h>
 
-const int Model::MAX_HISTORY = 10000;
+const int Model::MAX_HISTORY = 100000;
 const qreal Model::timeStep = 1.0;
 
 #define sqr(x) ((x)*(x))
@@ -55,9 +55,19 @@ void Model::clear()
 	impulseSum = 0;
 }
 
-int Model::getNumber()
+int Model::getNumber() const
 {
 	return num;
+}
+
+QVector<qreal> Model::getTime() const
+{
+	return time;
+}
+
+QVector<qreal> Model::getProb() const
+{
+	return prob;
 }
 
 void Model::setNumber(int newNum)
@@ -306,7 +316,7 @@ void Model::step(int elapsed)
 		if (!paintTraceOnly) {
 			// probability estimation
 			if ((curP.x() >= bin*binwidth) && (curP.x() < (bin+1)*binwidth) &&
-			    (newP.x() >= bin*binwidth) && (newP.x() < (bin+1)*binwidth))
+				(newP.x() >= bin*binwidth) && (newP.x() < (bin+1)*binwidth))
 				timeInside += s;
 			timeFull += s;
 

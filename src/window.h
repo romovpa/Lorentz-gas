@@ -7,6 +7,7 @@
 
 #include "model.h"
 #include "widget.h"
+#include "qcustomplot.h"
 
 namespace Ui {
 	class Window;
@@ -23,6 +24,7 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 
 protected slots:
+	void replot();
 	void saveShot();
 	void togglePlay();
 	void clearSettings();
@@ -33,9 +35,11 @@ protected slots:
 private:
 	Ui::Window *ui;
 
+	Model model;
+
 	QTimer *timer;
 	Widget *native;
-	Model model;
+	QCustomPlot* plot;
 
 	bool wasRunning;
 };

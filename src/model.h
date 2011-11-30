@@ -20,7 +20,9 @@ public:
 	void paint(QPainter *painter, QPaintEvent *event);
 	void setDim(int w, int h);
 
-	int getNumber();
+	int getNumber() const;
+	QVector<qreal> getTime() const;
+	QVector<qreal> getProb() const;
 
 	void setNumber(int newNum);
 	void setSide(int);

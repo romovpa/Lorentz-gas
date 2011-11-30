@@ -18,12 +18,16 @@ Window::Window(QWidget *parent)
 	appIcon.addFile(":/resources/app32.png", QSize(32,32));
 	setWindowIcon(appIcon);
 
+	plot = new QCustomPlot(this);
+	ui->plotLayout->addWidget(plot);
+
 	native = new Widget(&model, this);
 	ui->nativeLayout->addWidget(native, 0, 0);
 
 	timer = new QTimer(this);
 	timer->setInterval(refresh_rate);
 	connect(timer, SIGNAL(timeout()), native, SLOT(animate()));
+	connect(timer, SIGNAL(timeout()), this, SLOT(replot()));
 	wasRunning = false;
 
 	connect(ui->togglePlayButton, SIGNAL(clicked()), this, SLOT(togglePlay()));
@@ -43,6 +47,9 @@ Window::Window(QWidget *parent)
 	connect(ui->defDirBox, SIGNAL(valueChanged(double)), native, SLOT(setDefaultDirection(double)));
 	connect(ui->randomDefDirBox, SIGNAL(toggled(bool)), native, SLOT(setDefaultRandom(bool)));
 
+	plot->xAxis->setRange(0, 600);
+	plot->yAxis->setRange(0, 1);
+
 	native->setNumber(ui->numberBox->value());
 	native->setSide(ui->sideBox->value());
 	native->setAtomR(ui->atomRadBox->value());
@@ -56,7 +63,26 @@ Window::Window(QWidget *parent)
 	trailMode(ui->trailModeCheckBox->checkState());
 	updateTogglePlayButton();
 
+	setMinimumHeight(600);
 	adjustSize();
+}
+
+void Window::replot()
+{
+	QVector<qreal> x = model.getTime();
+	QVector<qreal> y = model.getProb();
+
+	plot->addGraph();
+	plot->graph(0)->setData(x, y);
+
+	plot->xAxis->setLabel("t");
+	plot->yAxis->setLabel("P");
+
+	int xmax = x.size() < 600 ? 600 : x.size();
+	int xmin = xmax - 600;
+	plot->xAxis->setRange(xmin, xmax);
+	plot->yAxis->setRange(0, 1);
+	plot->replot();
 }
 
 void Window::saveShot()
@@ -95,6 +121,9 @@ void Window::clearSettings()
 	timer->stop();
 	updateTogglePlayButton();
 	model.clear();
+	plot->clearGraphs();
+	plot->xAxis->setRange(0, 600);
+	plot->yAxis->setRange(0, 1);
 }
 
 void Window::trailMode(bool active)
