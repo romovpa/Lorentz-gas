@@ -70,31 +70,30 @@ Window::Window(QWidget *parent)
 void Window::replot()
 {
 	QVector<qreal> x = model.getTime();
-	QVector<qreal> y = model.getProb();
 
-	if (!y.empty())
+	int i = 0;
+	while (i < x.size())
 	{
-		int i = 0;
-		while (i < x.size())
+		if (x[i] == 1)
 		{
-			if (x[i] == 1)
-			{
-				x.remove(i);
-			}
-			else
-			{
-				i++;
-			}
+			x.remove(i);
 		}
+		else
+		{
+			i++;
+		}
+	}
 
-		if (x.size() > 200)
-		{
-			x.remove(0, x.size() - 200);
-			y.remove(0, y.size() - 200);
-		}
+	plot->clearGraphs();
+
+	if (!x.empty())
+	{
+		QVector<qreal> y;
 
 		if (ui->radioButton1->isChecked())
 		{
+			y = model.getProb();
+
 			plot->yAxis->setLabel("p");
 		}
 		else
@@ -108,10 +107,16 @@ void Window::replot()
 
 			for (int i = 0; i < x.size(); i++)
 			{
-				y[i] *= (qreal)2 / (2*x[i]*(model.getHeight() + model.getWidth()));
+				//y[i] *= (qreal)2 / (2*x[i]*(model.getHeight() + model.getWidth()));
 			}
 
 			plot->yAxis->setLabel("P");
+		}
+
+		if (x.size() > 200)
+		{
+			x.remove(0, x.size() - 200);
+			y.remove(0, y.size() - 200);
 		}
 
 		plot->xAxis->setLabel("t");
@@ -130,7 +135,15 @@ void Window::replot()
 		{
 			if (y[i] > ymax) ymax = y[i];
 		}
-		plot->yAxis->setRange(0, ymax);
+
+		if (ymax > 0.83)
+		{
+			plot->yAxis->setRange(0, ymax*0.2);
+		}
+		else
+		{
+			plot->yAxis->setRange(0, 1);
+		}
 
 		plot->replot();
 	}
@@ -173,7 +186,7 @@ void Window::clearSettings()
 	updateTogglePlayButton();
 	model.clear();
 	plot->clearGraphs();
-	plot->xAxis->setRange(0, 600);
+	plot->xAxis->setRange(0, 1000);
 	plot->yAxis->setRange(0, 1);
 }
 
