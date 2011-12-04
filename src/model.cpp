@@ -70,6 +70,11 @@ QVector<qreal> Model::getProb() const
 	return prob;
 }
 
+QVector<qreal> Model::getImpulses() const
+{
+	return impulses;
+}
+
 void Model::setNumber(int newNum)
 {
 	while (newNum < num) {

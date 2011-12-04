@@ -46,7 +46,7 @@ Window::Window(QWidget *parent)
 	connect(ui->defDirBox, SIGNAL(valueChanged(double)), native, SLOT(setDefaultDirection(double)));
 	connect(ui->randomDefDirBox, SIGNAL(toggled(bool)), native, SLOT(setDefaultRandom(bool)));
 
-	plot->xAxis->setRange(0, 600);
+	plot->xAxis->setRange(0, 1000);
 	plot->yAxis->setRange(0, 1);
 
 	native->setNumber(ui->numberBox->value());
@@ -69,19 +69,83 @@ Window::Window(QWidget *parent)
 void Window::replot()
 {
 	QVector<qreal> x = model.getTime();
-	QVector<qreal> y = model.getProb();
 
-	plot->addGraph();
-	plot->graph(0)->setData(x, y);
+	int i = 0;
+	while (i < x.size())
+	{
+		if (x[i] == 1)
+		{
+			x.remove(i);
+		}
+		else
+		{
+			i++;
+		}
+	}
 
-	plot->xAxis->setLabel("t");
-	plot->yAxis->setLabel("P");
+	plot->clearGraphs();
 
-	int xmax = x.size() < 600 ? 600 : x.size();
-	int xmin = xmax - 600;
-	plot->xAxis->setRange(xmin, xmax);
-	plot->yAxis->setRange(0, 1);
-	plot->replot();
+	if (!x.empty())
+	{
+		QVector<qreal> y;
+
+		if (ui->radioButton1->isChecked())
+		{
+			y = model.getProb();
+
+			plot->yAxis->setLabel("p");
+		}
+		else
+		{
+			y = model.getImpulses();
+
+			if (y.size() > x.size())
+			{
+				y.remove(0, y.size() - x.size());
+			}
+
+			for (int i = 0; i < x.size(); i++)
+			{
+				//y[i] *= (qreal)2 / (2*x[i]*(model.getHeight() + model.getWidth()));
+			}
+
+			plot->yAxis->setLabel("P");
+		}
+
+		if (x.size() > 200)
+		{
+			x.remove(0, x.size() - 200);
+			y.remove(0, y.size() - 200);
+		}
+
+		plot->xAxis->setLabel("t");
+
+		plot->addGraph();
+		plot->graph(0)->setData(x, y);
+
+		//int xmax = x.last() < 1000 ? 1000 : x.last();
+		//int xmin = x.last() < 1000 ? 0 : x.last() - 1000;
+		int xmax = x.last();
+		int xmin = x.first();
+		plot->xAxis->setRange(xmin, xmax);
+
+		int ymax = 0;
+		for (int i = 0; i < y.size(); i++)
+		{
+			if (y[i] > ymax) ymax = y[i];
+		}
+
+		if (ymax > 0.83)
+		{
+			plot->yAxis->setRange(0, ymax*0.2);
+		}
+		else
+		{
+			plot->yAxis->setRange(0, 1);
+		}
+
+		plot->replot();
+	}
 }
 
 void Window::saveShot()
@@ -121,7 +185,7 @@ void Window::clearSettings()
 	updateTogglePlayButton();
 	model.clear();
 	plot->clearGraphs();
-	plot->xAxis->setRange(0, 600);
+	plot->xAxis->setRange(0, 1000);
 	plot->yAxis->setRange(0, 1);
 }
 

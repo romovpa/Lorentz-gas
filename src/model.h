@@ -23,6 +23,9 @@ public:
 	int getNumber() const;
 	QVector<qreal> getTime() const;
 	QVector<qreal> getProb() const;
+	QVector<qreal> getImpulses() const;
+	int getWidth() const { return width; }
+	int getHeight() const { return height; }
 
 	void setNumber(int newNum);
 	void setSide(int);
