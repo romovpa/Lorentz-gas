@@ -4,7 +4,6 @@
 #include "window.h"
 #include "ui_window.h"
 
-static const int refresh_rate = 50;
 
 Window::Window(QWidget *parent)
 	: QMainWindow(parent),

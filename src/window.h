@@ -9,6 +9,9 @@
 #include "widget.h"
 #include "qcustomplot.h"
 
+static const int refresh_rate = 50;
+static const int trace_length = 3000;
+
 namespace Ui {
 	class Window;
 }

@@ -1,4 +1,5 @@
 #include <QtGui>
+#include "window.h"
 #include "widget.h"
 #include "model.h"
 
@@ -18,8 +19,8 @@ Widget::Widget(Model *model, QWidget *parent)
 
 void Widget::animate()
 {
-	elapsed = qobject_cast<QTimer*>(sender())->interval() % 1000;
-	model->step(elapsed);
+	// Old elapsed version: elapsed = qobject_cast<QTimer*>(sender())->interval() % 1000;
+	model->step(refresh_rate);
 	repaint();
 }
 
@@ -44,8 +45,8 @@ void Widget::paintEvent(QPaintEvent *event)
 
 	if (showTrace) {
 		int sum = 0;
-		int step = 2;
-		int length = 1500;
+		int step = refresh_rate;
+		int length = trace_length/refresh_rate;
 
 		model->save();
 		model->setPaintTraceOnly(true);
