@@ -17,6 +17,9 @@ Window::Window(QWidget *parent)
 	appIcon.addFile(":/resources/app32.png", QSize(32,32));
 	setWindowIcon(appIcon);
 
+	aboutDialog = new AboutDialog(this);
+	connect(ui->aboutButton, SIGNAL(clicked()), aboutDialog, SLOT(show()));
+
 	plot = new QCustomPlot(this);
 	ui->plotLayout->addWidget(plot);
 

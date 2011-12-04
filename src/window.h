@@ -7,6 +7,7 @@
 
 #include "model.h"
 #include "widget.h"
+#include "aboutdialog.h"
 #include "qcustomplot.h"
 
 static const int refresh_rate = 50;
@@ -43,6 +44,8 @@ private:
 	QTimer *timer;
 	Widget *native;
 	QCustomPlot* plot;
+
+	AboutDialog *aboutDialog;
 
 	bool wasRunning;
 };
