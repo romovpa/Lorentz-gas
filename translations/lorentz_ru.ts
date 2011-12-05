@@ -2,6 +2,22 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
+    <name>AboutDialog</name>
+    <message>
+        <location filename="../src/aboutdialog.ui" line="14"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../src/aboutdialog.ui" line="20"/>
+        <source>Над проектом работали
+
+Малышева Екатерина
+и компания...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Window</name>
     <message>
         <location filename="../src/window.ui" line="14"/>
@@ -15,7 +31,7 @@
     </message>
     <message>
         <location filename="../src/window.ui" line="36"/>
-        <location filename="../src/window.cpp" line="171"/>
+        <location filename="../src/window.cpp" line="152"/>
         <source>Play</source>
         <translation>Запуск</translation>
     </message>
@@ -115,12 +131,17 @@
         <translation>Давление</translation>
     </message>
     <message>
+        <location filename="../src/window.ui" line="352"/>
+        <source>Density</source>
+        <translation type="unfinished">Плотность</translation>
+    </message>
+    <message>
         <location filename="../src/window.cpp" line="13"/>
         <source>Physics</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="169"/>
+        <location filename="../src/window.cpp" line="150"/>
         <source>Pause</source>
         <translation>Приостановить</translation>
     </message>

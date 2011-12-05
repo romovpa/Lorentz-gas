@@ -24,6 +24,7 @@ public:
 	QVector<qreal> getTime() const;
 	QVector<qreal> getProb() const;
 	QVector<qreal> getImpulses() const;
+	QVector<qreal> getDensity() const;
 	int getWidth() const { return width; }
 	int getHeight() const { return height; }
 
@@ -42,6 +43,7 @@ public:
 	void setShowBins(bool);
 
 	static const qreal timeStep;
+	static const qreal measurePeriod;
 	static const int MAX_HISTORY;
 
 private:
@@ -79,8 +81,10 @@ private:
 	qreal binwidth;
 
 	qreal timeFull, timeInside, impulseSum;
+	QVector<qreal> timeInsideAll;
 	QVector<qreal> time;		// values of time
 	QVector<qreal> prob;		// magnitude of the bin
+	QVector<qreal> density;		// density of the electrons
 	QVector<qreal> impulses;	// overall sum of collision impulses
 };
 

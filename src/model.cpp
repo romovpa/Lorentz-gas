@@ -8,6 +8,7 @@
 
 const int Model::MAX_HISTORY = 100000;
 const qreal Model::timeStep = 1.0;
+const qreal Model::measurePeriod = 20.0;
 
 #define sqr(x) ((x)*(x))
 
@@ -50,6 +51,8 @@ void Model::clear()
 	time.clear();
 	prob.clear();
 	impulses.clear();
+	density = QVector<qreal>(nbins, 0);
+	timeInsideAll = QVector<qreal>(nbins, 0);
 	timeFull = 0;
 	timeInside = 0;
 	impulseSum = 0;
@@ -73,6 +76,11 @@ QVector<qreal> Model::getProb() const
 QVector<qreal> Model::getImpulses() const
 {
 	return impulses;
+}
+
+QVector<qreal> Model::getDensity() const
+{
+	return density;
 }
 
 void Model::setNumber(int newNum)
@@ -141,6 +149,8 @@ void Model::setBinsNumber(int num)
 {
 	nbins = num;
 	binwidth = (qreal)width / nbins;
+	density = QVector<qreal>(nbins, 0);
+	timeInsideAll = QVector<qreal>(nbins, 0);
 }
 
 void Model::setBinIndex(int idx)
@@ -167,26 +177,29 @@ void Model::checkBorders(QPointF& p, qreal& phi)
 	qreal x = p.x() - electronR;
 	qreal dy = y - h + 2*electronR;
 	qreal dx = x - w + 2*electronR;
+	qreal addImpulse = 0;
 	if (dy > 0) {
 		p.ry() = h - electronR - dy;
 		phi = 2 * M_PI - phi;
-		impulseSum += dy;
+		addImpulse += dy;
 	}
 	if (dx > 0) {
 		p.rx() = w - electronR - dx;
 		phi = 3 * M_PI - phi;
-		impulseSum += dx;
+		addImpulse += dx;
 	}
 	if (y < 0) {
 		p.ry() = electronR - y;
 		phi = 2 * M_PI - phi;
-		impulseSum += -y;
+		addImpulse += -y;
 	}
 	if (x < 0) {
 		p.rx() = electronR - x;
 		phi = 3 * M_PI - phi;
-		impulseSum += -x;
+		addImpulse += -x;
 	}
+	if (!paintTraceOnly)
+		impulseSum += addImpulse;
 }
 
 void Model::checkAtom(QPointF& p, qreal& phi, QPointF pOld)
@@ -317,24 +330,32 @@ void Model::step(int elapsed)
 		checkBorders(newP, speedDir[i]);
 		checkAtom(newP, speedDir[i], curP);
 		positions[i] = newP;
-
 		if (!paintTraceOnly) {
-			// probability estimation
 			if ((curP.x() >= bin*binwidth) && (curP.x() < (bin+1)*binwidth) &&
 				(newP.x() >= bin*binwidth) && (newP.x() < (bin+1)*binwidth))
-				timeInside += s;
-			timeFull += s;
-
-			if (time.size() < MAX_HISTORY) {
-				time.push_back(timeFull);
-				prob.push_back(timeInside/timeFull);
-				impulses.push_back(impulseSum);
+				timeInside += s/num;
+			for (int b = 0; b < nbins; ++b) {
+				if ((curP.x() >= b*binwidth) && (curP.x() < (b+1)*binwidth) &&
+					(newP.x() >= b*binwidth) && (newP.x() < (b+1)*binwidth))
+					timeInsideAll[b] += s/num;
 			}
 		}
 	}
-
 	if (!paintTraceOnly)
-		time += timeStep;
+		timeFull += s;
+
+	if ((time.empty() || (time.back() + measurePeriod <= timeFull)) && time.size() < MAX_HISTORY) {
+		time.push_back(timeFull/100.0);
+		prob.push_back(timeInside/timeFull);
+		impulses.push_back(impulseSum);
+		qreal psum = 0;
+		for (int b = 0; b < nbins; ++b) {
+			density[b] = timeInsideAll[b] / timeFull;
+			psum += density[b];
+		}
+		for (int b = 0; b < nbins; ++b)
+			density[b] /= psum;
+	}
 }
 
 

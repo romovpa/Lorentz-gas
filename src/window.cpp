@@ -71,84 +71,62 @@ Window::Window(QWidget *parent)
 
 void Window::replot()
 {
-	QVector<qreal> x = model.getTime();
-
-	int i = 0;
-	while (i < x.size())
-	{
-		if (x[i] == 1)
-		{
-			x.remove(i);
-		}
-		else
-		{
-			i++;
-		}
-	}
-
 	plot->clearGraphs();
 
-	if (!x.empty())
+	QVector<qreal> x;
+	QVector<qreal> y;
+	if (ui->plotProbabilityButton->isChecked())
 	{
-		QVector<qreal> y;
-
-		if (ui->radioButton1->isChecked())
-		{
-			y = model.getProb();
-
-			plot->yAxis->setLabel("p");
-		}
-		else
-		{
-			y = model.getImpulses();
-
-			if (y.size() > x.size())
-			{
-				y.remove(0, y.size() - x.size());
-			}
-
-			for (int i = 0; i < x.size(); i++)
-			{
-				//y[i] *= (qreal)2 / (2*x[i]*(model.getHeight() + model.getWidth()));
-			}
-
-			plot->yAxis->setLabel("P");
-		}
-
-		if (x.size() > 200)
-		{
-			x.remove(0, x.size() - 200);
-			y.remove(0, y.size() - 200);
-		}
-
-		plot->xAxis->setLabel("t");
-
-		plot->addGraph();
-		plot->graph(0)->setData(x, y);
-
-		//int xmax = x.last() < 1000 ? 1000 : x.last();
-		//int xmin = x.last() < 1000 ? 0 : x.last() - 1000;
-		int xmax = x.last();
-		int xmin = x.first();
-		plot->xAxis->setRange(xmin, xmax);
-
-		int ymax = 0;
-		for (int i = 0; i < y.size(); i++)
-		{
-			if (y[i] > ymax) ymax = y[i];
-		}
-
-		if (ymax > 0.83)
-		{
-			plot->yAxis->setRange(0, ymax*0.2);
-		}
-		else
-		{
-			plot->yAxis->setRange(0, 1);
-		}
-
-		plot->replot();
+		x = model.getTime();
+		y = model.getProb();
+		plot->yAxis->setLabel("probability");
 	}
+	else if (ui->plotPressureButton->isChecked())
+	{
+		x = model.getTime();
+		y = model.getImpulses();
+		for (int i = 0; i < x.size(); i++)
+			y[i] = y[i] / x[i];
+		plot->yAxis->setLabel("pressure");
+	}
+	else { // density plot
+		QVector<qreal> binProb = model.getDensity();
+		qreal binWidth = 1.0/binProb.size();
+		for (int b = 0; b < binProb.size(); ++b) {
+			x.push_back(b*binWidth);
+			y.push_back(binProb[b]);
+			x.push_back((b+1)*binWidth-1e-3);
+			y.push_back(binProb[b]);
+		}
+		plot->yAxis->setLabel("density");
+	}
+
+	plot->xAxis->setLabel("t");
+
+	plot->addGraph();
+	plot->graph(0)->setData(x, y);
+
+	qreal xmax = x.last();
+	qreal xmin = x.first();
+	plot->xAxis->setRange(xmin, xmax);
+
+	qreal ymax = -100500.0;
+	qreal ymin = 100500.0;
+	for (int i = 0; i < y.size(); i++) {
+		if (y[i] > ymax)
+			ymax = y[i];
+		if (y[i] < ymin)
+			ymin = y[i];
+	}
+	qreal gap = (ymax-ymin)*0.05;
+
+	if (ui->plotProbabilityButton->isChecked())
+		plot->yAxis->setRange(0.0, 1.0);
+	else if (ui->plotDensityButton->isChecked())
+		plot->yAxis->setRange(0.0, (2*ymax < 1.0 ? 2*ymax : 1.0));
+	else
+		plot->yAxis->setRange(ymin-gap, ymax+gap);
+	plot->replot();
 }
 
 void Window::saveShot()

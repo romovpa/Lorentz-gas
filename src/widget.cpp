@@ -19,7 +19,6 @@ Widget::Widget(Model *model, QWidget *parent)
 
 void Widget::animate()
 {
-	// Old elapsed version: elapsed = qobject_cast<QTimer*>(sender())->interval() % 1000;
 	model->step(refresh_rate);
 	repaint();
 }
@@ -29,8 +28,6 @@ void Widget::setTrace(bool set)
 	showTrace = set;
 	repaint();
 }
-
-
 
 void Widget::paintEvent(QPaintEvent *event)
 {
